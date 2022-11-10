@@ -1,6 +1,4 @@
 gen/
 out/
-gen_parser/
 .vs/
 CMakeSettings.json
-
