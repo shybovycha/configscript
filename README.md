@@ -47,17 +47,7 @@ cmake --build build
 First, add the necessary headers to your code:
 
 ```cpp
-#include <antlr4-runtime.h>
-
-#include "gen_parser/ConfigScriptLexer.h"
-#include "gen_parser/ConfigScriptParser.h"
-#include "gen_parser/ConfigScriptBaseListener.h"
-```
-
-Preferably, set the following pragma directive to use UTF-8 encoding:
-
-```cpp
-#pragma execution_character_set("utf-8")
+#include "parser.hpp"
 ```
 
 Parse the code:
@@ -78,49 +68,39 @@ my_object_1 "Example/ObjectName" // <--- this can not be just Example/ObjectName
 }
 )";
 
-// transform the input to antlr4 format
-antlr4::ANTLRInputStream input(configSource);
-
-// instantiate a lexer
-ConfigScriptLexer lexer(&input);
-
-// extract tokens from the input (via lexer)
-antlr4::CommonTokenStream tokens(&lexer);
-
-// instantiate a parser
-ConfigScriptParser parser(&tokens);
-
-// parse the source into a tree
-antlr4::tree::ParseTree* tree = parser.config();
+// parse the source
+auto config = ConfigScript::Parser::parse(configSource);
 ```
 
-Then, the top-level objects from the config are available via
+The `config` variable would then contain a list (`std::vector`) of top-level objects from the config.
+
+To access the top-level object properties, use
 
 ```cpp
-auto objects = antlrcpp::downCast<ConfigScriptParser::ConfigContext*>(tree)->object();
+std::map<std::string, ConfigScript::PropertyType> properties = config[0].properties;
 ```
 
-To access the top-level object body (which is a map/dictionary of properties), use
+`ConfigScripr::PropertyType` is an alias for `std::variant` containing all possible value types:
+
+* `int` and `float` vectors of 2, 3 or 4 components: `Vec2i`, `Vec3i`, `Vec4i`, `Vec2f`, `Vec3f`, `Vec4f`
+* `std::string`
+* `bool`
+* `int`
+* `float`
+* objects, represented as 
+  ```cpp
+  ConfigScript::Object {
+    std::string name;
+    std::string classifier;
+    std::map<std::string, ConfigScript::PropertyType> properties;
+  }
+  ```
+
+Since `PropertyType` is alias for `std::variant`, you would have to cast it to whatever it is underneath in order to access a specific property value:
 
 ```cpp
-auto objectValue = obj->value;
-
-std::map<std::string, std::any> properties = objectValue->properties;
-```
-
-Each property is of `std::any` type, so you would have to cast it to whatever it is in order to access a specific property value:
-
-```cpp
-auto property1 = std::any_cast<std::string>(propertyValue1); // string values
-auto property2 = std::any_cast<std::vector<float>>(propertyValue2); // array of numbers values
-```
-
-If a property is an object on its own, you will have to cast it to `ConfigScriptParser::ObjectValueContext*` first:
-
-```cpp
-auto obj = std::any_cast<ConfigScriptParser::ObjectValueContext*>(value);
-
-auto properties = obj->properties;
+auto property1 = std::get<std::string>(propertyValue1); // string values
+auto property2 = std::get<ConfigScript::Vec3f>(propertyValue2); // 4-component float vector
 ```
 
 Objects can have a _classifier_, which is a string following the object _name_:

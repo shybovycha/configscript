@@ -444,15 +444,15 @@ ConfigScriptParser::PropertyValueContext* ConfigScriptParser::propertyValue() {
       enterOuterAlt(_localctx, 6);
       setState(44);
       antlrcpp::downCast<PropertyValueContext *>(_localctx)->stringToken = match(ConfigScriptParser::STRING);
-       antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = (antlrcpp::downCast<PropertyValueContext *>(_localctx)->stringToken != nullptr ? antlrcpp::downCast<PropertyValueContext *>(_localctx)->stringToken->getText() : ""); 
+       std::string s1 = (antlrcpp::downCast<PropertyValueContext *>(_localctx)->stringToken != nullptr ? antlrcpp::downCast<PropertyValueContext *>(_localctx)->stringToken->getText() : ""); std::string_view s = s1; if (!s.empty() && s.front() == '"' && s.back() == '"') { s.remove_prefix(1); s.remove_suffix(1); } antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = std::string(s); 
       break;
     }
 
     case 7: {
       enterOuterAlt(_localctx, 7);
       setState(46);
-      objectValue();
-       antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = antlrcpp::downCast<PropertyValueContext*>(_localctx)->objectValue(); 
+      antlrcpp::downCast<PropertyValueContext *>(_localctx)->objectValueContext = objectValue();
+       antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = antlrcpp::downCast<PropertyValueContext*>(_localctx)->objectValue(); antlrcpp::downCast<PropertyValueContext *>(_localctx)->objectValueContext->name = antlrcpp::downCast<PropertyContext*>(_localctx->parent)->identifierToken->getText(); 
       break;
     }
 
@@ -558,7 +558,7 @@ ConfigScriptParser::ObjectValueContext* ConfigScriptParser::objectValue() {
         }
         setState(67);
         match(ConfigScriptParser::T__1);
-         antlrcpp::downCast<ObjectValueContext *>(_localctx)->classifier =  (antlrcpp::downCast<ObjectValueContext *>(_localctx)->stringToken != nullptr ? antlrcpp::downCast<ObjectValueContext *>(_localctx)->stringToken->getText() : ""); 
+         std::string s1 = (antlrcpp::downCast<ObjectValueContext *>(_localctx)->stringToken != nullptr ? antlrcpp::downCast<ObjectValueContext *>(_localctx)->stringToken->getText() : ""); std::string_view s = s1; if (!s.empty() && s.front() == '"' && s.back() == '"') { s.remove_prefix(1); s.remove_suffix(1); } antlrcpp::downCast<ObjectValueContext *>(_localctx)->classifier =  std::string(s); 
         break;
       }
 

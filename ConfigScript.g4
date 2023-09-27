@@ -28,17 +28,18 @@ propertyValue
     | INT { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = std::stoi($INT.text); }
     | FLOAT { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = std::stof($FLOAT.text); }
     | BOOL { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = static_cast<bool>($BOOL.text == "true"); }
-    | STRING { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = $STRING.text; }
-    | objectValue { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = antlrcpp::downCast<PropertyValueContext*>(_localctx)->objectValue(); }
+    | STRING { std::string s1 = $STRING.text; std::string_view s = s1; if (!s.empty() && s.front() == '"' && s.back() == '"') { s.remove_prefix(1); s.remove_suffix(1); } antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = std::string(s); }
+    | objectValue { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = antlrcpp::downCast<PropertyValueContext*>(_localctx)->objectValue(); $objectValue.name = antlrcpp::downCast<PropertyContext*>(_localctx->parent)->identifierToken->getText(); }
     ;
 
 objectValue
     returns [
+        std::string name,
         std::string classifier,
         std::map<std::string, std::any> properties
     ]
     : '{' property* '}'
-    | STRING '{' (property)* '}' { $classifier = $STRING.text; }
+    | STRING '{' (property)* '}' { std::string s1 = $STRING.text; std::string_view s = s1; if (!s.empty() && s.front() == '"' && s.back() == '"') { s.remove_prefix(1); s.remove_suffix(1); } $classifier = std::string(s); }
     ;
 
 intVector

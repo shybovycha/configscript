@@ -3,93 +3,79 @@
 #include <map>
 #include <variant>
 
-#include <antlr4-runtime.h>
+#include "parser.hpp"
 
-#include "gen_parser/ConfigScriptLexer.h"
-#include "gen_parser/ConfigScriptParser.h"
-#include "gen_parser/ConfigScriptBaseListener.h"
-
-#pragma execution_character_set("utf-8")
-
-void printAny(std::any value)
+void prettyPrint(ConfigScript::PropertyType value)
 {
-    if (value.type() == typeid(std::string))
+    if (std::holds_alternative<std::string>(value))
     {
-        std::cout << "(str) { " << std::any_cast<std::string>(value) << " }";
+        std::cout << "(str) { " << std::get<std::string>(value) << " }";
     }
-    else if (value.type() == typeid(int))
+    else if (std::holds_alternative<int>(value))
     {
-        std::cout << "(int) { " << std::any_cast<int>(value) << " }";
+        std::cout << "(int) { " << std::get<int>(value) << " }";
     }
-    else if (value.type() == typeid(float))
+    else if (std::holds_alternative<float>(value))
     {
-        std::cout << "(float) { " << std::any_cast<float>(value) << " }";
+        std::cout << "(float) { " << std::get<float>(value) << " }";
     }
-    else if (value.type() == typeid(std::vector<int>))
+    else if (std::holds_alternative<ConfigScript::Vec2i>(value))
     {
-        auto vec = std::any_cast<std::vector<int>>(value);
+        auto vec = std::get<ConfigScript::Vec2i>(value);
 
-        std::cout << "(int[]) { ";
-
-        for (auto val : vec)
-        {
-            std::cout << val << ", ";
-        }
-
-        std::cout << " }";
+        std::cout << std::format("(vec2i) {{ {}, {} }}\n", vec.x, vec.y);
     }
-    else if (value.type() == typeid(std::vector<float>))
+    else if (std::holds_alternative<ConfigScript::Vec3i>(value))
     {
-        auto vec = std::any_cast<std::vector<float>>(value);
+        auto vec = std::get<ConfigScript::Vec3i>(value);
 
-        std::cout << "(float[]) { ";
-
-        for (auto val : vec)
-        {
-            std::cout << val << ", ";
-        }
-
-        std::cout << " }";
+        std::cout << std::format("(vec3i) {{ {}, {}, {} }}\n", vec.x, vec.y, vec.z);
     }
-    else if (value.type() == typeid(ConfigScriptParser::ObjectValueContext*))
+    else if (std::holds_alternative<ConfigScript::Vec4i>(value))
     {
-        auto obj = std::any_cast<ConfigScriptParser::ObjectValueContext*>(value);
+        auto vec = std::get<ConfigScript::Vec4i>(value);
 
-        std::cout << std::format("(obj, {}) {{\n", obj->classifier);
-
-        auto props = obj->properties;
-
-        for (auto& prop_kv : props)
-        {
-            std::cout << prop_kv.first << " = ";
-
-            printAny(prop_kv.second);
-        }
-
-        std::cout << "\n}";
+        std::cout << std::format("(vec4i) {{ {}, {}, {}, {} }}\n", vec.x, vec.y, vec.z, vec.w);
     }
-    else if (value.type() == typeid(ConfigScriptParser::TopLevelObjectContext*))
+    else if (std::holds_alternative<ConfigScript::Vec2f>(value))
     {
-        auto obj = std::any_cast<ConfigScriptParser::TopLevelObjectContext*>(value);
+        auto vec = std::get<ConfigScript::Vec2f>(value);
 
-        auto objectName = obj->name;
-        auto objectValue = obj->value;
-        auto objectClassifier = objectValue->classifier;
+        std::cout << std::format("(vec2f) {{ {}, {} }}\n", vec.x, vec.y);
+    }
+    else if (std::holds_alternative<ConfigScript::Vec3f>(value))
+    {
+        auto vec = std::get<ConfigScript::Vec3f>(value);
 
-        std::cout << std::format("<top level> {} ({}) {{\n", objectName, objectClassifier);
+        std::cout << std::format("(vec3f) {{ {}, {}, {}}}\n", vec.x, vec.y, vec.z);
+    }
+    else if (std::holds_alternative<ConfigScript::Vec4f>(value))
+    {
+        auto vec = std::get<ConfigScript::Vec4f>(value);
 
-        auto properties = objectValue->properties;
+        std::cout << std::format("(vec4f) {{ {}, {}, {}, {} }}\n", vec.x, vec.y, vec.z, vec.w);
+    }
+    else if (std::holds_alternative<ConfigScript::Object>(value))
+    {
+        auto obj = std::get<ConfigScript::Object>(value);
+
+        auto& objectName = obj.name;
+        auto& objectClassifier = obj.classifier;
+
+        std::cout << std::format("{} (obj, {}) {{\n", objectName, objectClassifier);
+
+        auto& properties = obj.properties;
 
         for (auto& p : properties)
         {
             std::cout << p.first << " = ";
 
-            printAny(p.second);
+            prettyPrint(p.second);
 
             std::cout << std::endl;
         }
 
-        std::cout << "\n} " << std::endl;
+        std::cout << "}\n " << std::endl;
     }
 }
 
@@ -127,27 +113,11 @@ maaaan!
 }
 )";
 
-    antlr4::ANTLRInputStream input(configSource);
+    auto config = ConfigScript::Parser::parse(configSource);
 
-    ConfigScriptLexer lexer(&input);
-
-    antlr4::CommonTokenStream tokens(&lexer);
-
-    ConfigScriptParser parser(&tokens);
-
-    antlr4::tree::ParseTree* tree = parser.config();
-
-    auto s = tree->toStringTree(&parser);
-
-    std::cout << "Parse Tree: " << s << std::endl;
-
-    auto objects = antlrcpp::downCast<ConfigScriptParser::ConfigContext*>(tree)->topLevelObject();
-
-    std::cout << "Objects found: " << objects.size() << std::endl;
-
-    for (auto obj : objects)
+    for (auto& obj : config)
     {
-        printAny(obj);
+        prettyPrint(obj);
     }
 
     return 0;

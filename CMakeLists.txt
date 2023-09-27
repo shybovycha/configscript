@@ -9,7 +9,8 @@ add_library(configscript
     "gen_parser/ConfigScriptParser.h"
     "gen_parser/ConfigScriptBaseListener.cpp"
     "gen_parser/ConfigScriptBaseListener.h"
-)
+    "parser.hpp"
+ )
 
 set_property(TARGET configscript PROPERTY CXX_STANDARD 20)
 

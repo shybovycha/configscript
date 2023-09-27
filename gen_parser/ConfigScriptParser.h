@@ -109,6 +109,7 @@ public:
     antlr4::Token *floatToken = nullptr;
     antlr4::Token *boolToken = nullptr;
     antlr4::Token *stringToken = nullptr;
+    ConfigScriptParser::ObjectValueContext *objectValueContext = nullptr;
     PropertyValueContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     IntVectorContext *intVector();
@@ -128,6 +129,7 @@ public:
 
   class  ObjectValueContext : public antlr4::ParserRuleContext {
   public:
+    std::string name;
     std::string classifier;
     std::map<std::string, std::any> properties;
     antlr4::Token *stringToken = nullptr;
