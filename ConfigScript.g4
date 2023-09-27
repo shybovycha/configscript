@@ -11,7 +11,7 @@ object
     returns [
         std::string name
     ]
-    : Identifier objectValue { $name = $Identifier->getText(); }
+    : Identifier value=objectValue { $name = $Identifier->getText(); }
     ;
 
 property
@@ -29,7 +29,7 @@ propertyValue
     | FLOAT { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = std::stof($FLOAT.text); }
     | BOOL { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = static_cast<bool>($BOOL.text == "true"); }
     | STRING { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = $STRING.text; }
-    | objectValue { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = $objectValue.propertyMap; }
+    | objectValue { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = antlrcpp::downCast<PropertyValueContext*>(_localctx)->objectValue(); }
     ;
 
 objectValue

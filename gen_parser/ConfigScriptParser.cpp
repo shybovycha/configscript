@@ -3,7 +3,7 @@
     #include <any>
 
 
-// Generated from .\ConfigScript.g4 by ANTLR 4.10.1
+// Generated from .\ConfigScript.g4 by ANTLR 4.13.0
 
 
 #include "ConfigScriptListener.h"
@@ -40,11 +40,20 @@ struct ConfigScriptParserStaticData final {
   std::unique_ptr<antlr4::atn::ATN> atn;
 };
 
-std::once_flag configscriptParserOnceFlag;
+::antlr4::internal::OnceFlag configscriptParserOnceFlag;
+#if ANTLR4_USE_THREAD_LOCAL_CACHE
+static thread_local
+#endif
 ConfigScriptParserStaticData *configscriptParserStaticData = nullptr;
 
 void configscriptParserInitialize() {
+#if ANTLR4_USE_THREAD_LOCAL_CACHE
+  if (configscriptParserStaticData != nullptr) {
+    return;
+  }
+#else
   assert(configscriptParserStaticData == nullptr);
+#endif
   auto staticData = std::make_unique<ConfigScriptParserStaticData>(
     std::vector<std::string>{
       "config", "object", "property", "propertyValue", "objectValue", "intVector", 
@@ -253,7 +262,7 @@ ConfigScriptParser::ObjectContext* ConfigScriptParser::object() {
     setState(24);
     antlrcpp::downCast<ObjectContext *>(_localctx)->identifierToken = match(ConfigScriptParser::Identifier);
     setState(25);
-    objectValue();
+    antlrcpp::downCast<ObjectContext *>(_localctx)->value = objectValue();
      antlrcpp::downCast<ObjectContext *>(_localctx)->name =  antlrcpp::downCast<ObjectContext *>(_localctx)->identifierToken->getText(); 
    
   }
@@ -443,8 +452,8 @@ ConfigScriptParser::PropertyValueContext* ConfigScriptParser::propertyValue() {
     case 7: {
       enterOuterAlt(_localctx, 7);
       setState(46);
-      antlrcpp::downCast<PropertyValueContext *>(_localctx)->objectValueContext = objectValue();
-       antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = antlrcpp::downCast<PropertyValueContext *>(_localctx)->objectValueContext->propertyMap; 
+      objectValue();
+       antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = antlrcpp::downCast<PropertyValueContext*>(_localctx)->objectValue(); 
       break;
     }
 
@@ -770,5 +779,9 @@ ConfigScriptParser::CommentContext* ConfigScriptParser::comment() {
 }
 
 void ConfigScriptParser::initialize() {
-  std::call_once(configscriptParserOnceFlag, configscriptParserInitialize);
+#if ANTLR4_USE_THREAD_LOCAL_CACHE
+  configscriptParserInitialize();
+#else
+  ::antlr4::internal::call_once(configscriptParserOnceFlag, configscriptParserInitialize);
+#endif
 }

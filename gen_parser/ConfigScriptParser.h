@@ -3,7 +3,7 @@
     #include <any>
 
 
-// Generated from .\ConfigScript.g4 by ANTLR 4.10.1
+// Generated from .\ConfigScript.g4 by ANTLR 4.13.0
 
 #pragma once
 
@@ -72,6 +72,7 @@ public:
   public:
     std::string name;
     antlr4::Token *identifierToken = nullptr;
+    ConfigScriptParser::ObjectValueContext *value = nullptr;
     ObjectContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Identifier();
@@ -109,7 +110,6 @@ public:
     antlr4::Token *floatToken = nullptr;
     antlr4::Token *boolToken = nullptr;
     antlr4::Token *stringToken = nullptr;
-    ConfigScriptParser::ObjectValueContext *objectValueContext = nullptr;
     PropertyValueContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     IntVectorContext *intVector();

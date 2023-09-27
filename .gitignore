@@ -1,4 +1,7 @@
 gen/
 out/
 .vs/
+.vscode/
 CMakeSettings.json
+vcpkg_installed/
+.antlr/

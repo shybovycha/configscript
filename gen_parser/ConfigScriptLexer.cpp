@@ -3,7 +3,7 @@
     #include <any>
 
 
-// Generated from .\ConfigScript.g4 by ANTLR 4.10.1
+// Generated from .\ConfigScript.g4 by ANTLR 4.13.0
 
 
 #include "ConfigScriptLexer.h"
@@ -45,11 +45,20 @@ struct ConfigScriptLexerStaticData final {
   std::unique_ptr<antlr4::atn::ATN> atn;
 };
 
-std::once_flag configscriptlexerLexerOnceFlag;
+::antlr4::internal::OnceFlag configscriptlexerLexerOnceFlag;
+#if ANTLR4_USE_THREAD_LOCAL_CACHE
+static thread_local
+#endif
 ConfigScriptLexerStaticData *configscriptlexerLexerStaticData = nullptr;
 
 void configscriptlexerLexerInitialize() {
+#if ANTLR4_USE_THREAD_LOCAL_CACHE
+  if (configscriptlexerLexerStaticData != nullptr) {
+    return;
+  }
+#else
   assert(configscriptlexerLexerStaticData == nullptr);
+#endif
   auto staticData = std::make_unique<ConfigScriptLexerStaticData>(
     std::vector<std::string>{
       "T__0", "T__1", "STRING", "BOOL", "DOUBLE_QUOTED_STRING", "SINGLE_QUOTED_STRING", 
@@ -178,5 +187,9 @@ const atn::ATN& ConfigScriptLexer::getATN() const {
 
 
 void ConfigScriptLexer::initialize() {
-  std::call_once(configscriptlexerLexerOnceFlag, configscriptlexerLexerInitialize);
+#if ANTLR4_USE_THREAD_LOCAL_CACHE
+  configscriptlexerLexerInitialize();
+#else
+  ::antlr4::internal::call_once(configscriptlexerLexerOnceFlag, configscriptlexerLexerInitialize);
+#endif
 }
