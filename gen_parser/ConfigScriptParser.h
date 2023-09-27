@@ -16,9 +16,8 @@
 class  ConfigScriptParser : public antlr4::Parser {
 public:
   enum {
-    T__0 = 1, T__1 = 2, STRING = 3, BOOL = 4, DOUBLE_QUOTED_STRING = 5, 
-    SINGLE_QUOTED_STRING = 6, Identifier = 7, INT = 8, FLOAT = 9, WHITESPACE = 10, 
-    ALPHA = 11, NUM = 12, LINE_COMMENT = 13, BLOCK_COMMENT = 14
+    T__0 = 1, T__1 = 2, STRING = 3, BOOL = 4, Identifier = 5, INT = 6, FLOAT = 7, 
+    WHITESPACE = 8, ALPHA = 9, NUM = 10, LINE_COMMENT = 11, BLOCK_COMMENT = 12
   };
 
   enum {

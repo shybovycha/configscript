@@ -53,30 +53,25 @@ floatVector
 
 comment : LINE_COMMENT | BLOCK_COMMENT ;
 
-STRING : DOUBLE_QUOTED_STRING | SINGLE_QUOTED_STRING ;
+STRING : '"' (STRING_TEXT | EOL)* '"' ;
 
 BOOL : 'true' | 'false' ;
 
-DOUBLE_QUOTED_STRING : '"' DoubleQuoteStringChar* '"' ;
-SINGLE_QUOTED_STRING : '\'' SingleQuoteStringChar* '\'' ;
-
 Identifier : ALPHA (ALPHA | NUM)* ;
-
-fragment SingleQuoteStringChar : ~['\r\n] ;
-    // : ~['\\\r\n]
-    // | SimpleEscapeSequence ;
-
-fragment DoubleQuoteStringChar : ~["\r\n] ;
-    // : ~["\\\r\n]
-    // | SimpleEscapeSequence ;
-
-// fragment SimpleEscapeSequence : '\\' ['"?abfnrtv\\] ;
 
 INT : '0'
     | '-'? [1-9] [0-9]*
     ;
 
 FLOAT : ('+' | '-')? NUM+ '.' NUM+ ;
+
+// fragments are rules that are inlined, so unlike tokens (WHITESPACE, ALPHA, NUM, etc.) these are not included in match results
+// without these, the input would be tokenized as STRING_TEXT and not as Identifier, for instance
+fragment STRING_TEXT : ( ~["\r\n\\] | ESCAPE_SEQUENCE )+ ;
+
+fragment ESCAPE_SEQUENCE : '\\' ( [btf"\\] | EOF ) ;
+
+fragment EOL : '\r'? '\n' ;
 
 WHITESPACE : [ \r\n\t]+ -> skip ;
 ALPHA : [a-zA-Z_] ;

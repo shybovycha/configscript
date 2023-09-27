@@ -112,6 +112,13 @@ my_object_1 "Example/ObjectName" // <--- this can not be just Example/ObjectName
 
         // and so on..
 
+        my_long_string "
+long
+long
+loooong
+maaaan!
+        "
+
         /*
         block
         comment
