@@ -22,7 +22,7 @@ public:
   };
 
   enum {
-    RuleConfig = 0, RuleObject = 1, RuleProperty = 2, RulePropertyValue = 3, 
+    RuleConfig = 0, RuleTopLevelObject = 1, RuleProperty = 2, RulePropertyValue = 3, 
     RuleObjectValue = 4, RuleIntVector = 5, RuleFloatVector = 6, RuleComment = 7
   };
 
@@ -44,7 +44,7 @@ public:
 
 
   class ConfigContext;
-  class ObjectContext;
+  class TopLevelObjectContext;
   class PropertyContext;
   class PropertyValueContext;
   class ObjectValueContext;
@@ -54,12 +54,12 @@ public:
 
   class  ConfigContext : public antlr4::ParserRuleContext {
   public:
-    ConfigScriptParser::ObjectContext *objects = nullptr;
+    ConfigScriptParser::TopLevelObjectContext *objects = nullptr;
     ConfigContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *EOF();
-    std::vector<ObjectContext *> object();
-    ObjectContext* object(size_t i);
+    std::vector<TopLevelObjectContext *> topLevelObject();
+    TopLevelObjectContext* topLevelObject(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -68,12 +68,12 @@ public:
 
   ConfigContext* config();
 
-  class  ObjectContext : public antlr4::ParserRuleContext {
+  class  TopLevelObjectContext : public antlr4::ParserRuleContext {
   public:
     std::string name;
     antlr4::Token *identifierToken = nullptr;
     ConfigScriptParser::ObjectValueContext *value = nullptr;
-    ObjectContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    TopLevelObjectContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Identifier();
     ObjectValueContext *objectValue();
@@ -83,7 +83,7 @@ public:
    
   };
 
-  ObjectContext* object();
+  TopLevelObjectContext* topLevelObject();
 
   class  PropertyContext : public antlr4::ParserRuleContext {
   public:
@@ -130,7 +130,7 @@ public:
   class  ObjectValueContext : public antlr4::ParserRuleContext {
   public:
     std::string classifier;
-    std::map<std::string, std::any> propertyMap;
+    std::map<std::string, std::any> properties;
     antlr4::Token *stringToken = nullptr;
     ObjectValueContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;

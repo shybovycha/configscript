@@ -56,8 +56,8 @@ void configscriptParserInitialize() {
 #endif
   auto staticData = std::make_unique<ConfigScriptParserStaticData>(
     std::vector<std::string>{
-      "config", "object", "property", "propertyValue", "objectValue", "intVector", 
-      "floatVector", "comment"
+      "config", "topLevelObject", "property", "propertyValue", "objectValue", 
+      "intVector", "floatVector", "comment"
     },
     std::vector<std::string>{
       "", "'{'", "'}'"
@@ -153,12 +153,12 @@ tree::TerminalNode* ConfigScriptParser::ConfigContext::EOF() {
   return getToken(ConfigScriptParser::EOF, 0);
 }
 
-std::vector<ConfigScriptParser::ObjectContext *> ConfigScriptParser::ConfigContext::object() {
-  return getRuleContexts<ConfigScriptParser::ObjectContext>();
+std::vector<ConfigScriptParser::TopLevelObjectContext *> ConfigScriptParser::ConfigContext::topLevelObject() {
+  return getRuleContexts<ConfigScriptParser::TopLevelObjectContext>();
 }
 
-ConfigScriptParser::ObjectContext* ConfigScriptParser::ConfigContext::object(size_t i) {
-  return getRuleContext<ConfigScriptParser::ObjectContext>(i);
+ConfigScriptParser::TopLevelObjectContext* ConfigScriptParser::ConfigContext::topLevelObject(size_t i) {
+  return getRuleContext<ConfigScriptParser::TopLevelObjectContext>(i);
 }
 
 
@@ -197,7 +197,7 @@ ConfigScriptParser::ConfigContext* ConfigScriptParser::config() {
     _la = _input->LA(1);
     while (_la == ConfigScriptParser::Identifier) {
       setState(16);
-      antlrcpp::downCast<ConfigContext *>(_localctx)->objects = object();
+      antlrcpp::downCast<ConfigContext *>(_localctx)->objects = topLevelObject();
       setState(21);
       _errHandler->sync(this);
       _la = _input->LA(1);
@@ -215,40 +215,40 @@ ConfigScriptParser::ConfigContext* ConfigScriptParser::config() {
   return _localctx;
 }
 
-//----------------- ObjectContext ------------------------------------------------------------------
+//----------------- TopLevelObjectContext ------------------------------------------------------------------
 
-ConfigScriptParser::ObjectContext::ObjectContext(ParserRuleContext *parent, size_t invokingState)
+ConfigScriptParser::TopLevelObjectContext::TopLevelObjectContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* ConfigScriptParser::ObjectContext::Identifier() {
+tree::TerminalNode* ConfigScriptParser::TopLevelObjectContext::Identifier() {
   return getToken(ConfigScriptParser::Identifier, 0);
 }
 
-ConfigScriptParser::ObjectValueContext* ConfigScriptParser::ObjectContext::objectValue() {
+ConfigScriptParser::ObjectValueContext* ConfigScriptParser::TopLevelObjectContext::objectValue() {
   return getRuleContext<ConfigScriptParser::ObjectValueContext>(0);
 }
 
 
-size_t ConfigScriptParser::ObjectContext::getRuleIndex() const {
-  return ConfigScriptParser::RuleObject;
+size_t ConfigScriptParser::TopLevelObjectContext::getRuleIndex() const {
+  return ConfigScriptParser::RuleTopLevelObject;
 }
 
-void ConfigScriptParser::ObjectContext::enterRule(tree::ParseTreeListener *listener) {
+void ConfigScriptParser::TopLevelObjectContext::enterRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ConfigScriptListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->enterObject(this);
+    parserListener->enterTopLevelObject(this);
 }
 
-void ConfigScriptParser::ObjectContext::exitRule(tree::ParseTreeListener *listener) {
+void ConfigScriptParser::TopLevelObjectContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<ConfigScriptListener *>(listener);
   if (parserListener != nullptr)
-    parserListener->exitObject(this);
+    parserListener->exitTopLevelObject(this);
 }
 
-ConfigScriptParser::ObjectContext* ConfigScriptParser::object() {
-  ObjectContext *_localctx = _tracker.createInstance<ObjectContext>(_ctx, getState());
-  enterRule(_localctx, 2, ConfigScriptParser::RuleObject);
+ConfigScriptParser::TopLevelObjectContext* ConfigScriptParser::topLevelObject() {
+  TopLevelObjectContext *_localctx = _tracker.createInstance<TopLevelObjectContext>(_ctx, getState());
+  enterRule(_localctx, 2, ConfigScriptParser::RuleTopLevelObject);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -260,10 +260,10 @@ ConfigScriptParser::ObjectContext* ConfigScriptParser::object() {
   try {
     enterOuterAlt(_localctx, 1);
     setState(24);
-    antlrcpp::downCast<ObjectContext *>(_localctx)->identifierToken = match(ConfigScriptParser::Identifier);
+    antlrcpp::downCast<TopLevelObjectContext *>(_localctx)->identifierToken = match(ConfigScriptParser::Identifier);
     setState(25);
-    antlrcpp::downCast<ObjectContext *>(_localctx)->value = objectValue();
-     antlrcpp::downCast<ObjectContext *>(_localctx)->name =  antlrcpp::downCast<ObjectContext *>(_localctx)->identifierToken->getText(); 
+    antlrcpp::downCast<TopLevelObjectContext *>(_localctx)->value = objectValue();
+     antlrcpp::downCast<TopLevelObjectContext *>(_localctx)->name =  antlrcpp::downCast<TopLevelObjectContext *>(_localctx)->identifierToken->getText(); 
    
   }
   catch (RecognitionException &e) {
@@ -323,7 +323,7 @@ ConfigScriptParser::PropertyContext* ConfigScriptParser::property() {
     antlrcpp::downCast<PropertyContext *>(_localctx)->identifierToken = match(ConfigScriptParser::Identifier);
     setState(29);
     propertyValue();
-     antlrcpp::downCast<PropertyContext *>(_localctx)->name =  antlrcpp::downCast<PropertyContext *>(_localctx)->identifierToken->getText(); antlrcpp::downCast<ObjectValueContext*>(_localctx->parent)->propertyMap[_localctx->name] = _localctx->value; 
+     antlrcpp::downCast<PropertyContext *>(_localctx)->name =  antlrcpp::downCast<PropertyContext *>(_localctx)->identifierToken->getText(); antlrcpp::downCast<ObjectValueContext*>(_localctx->parent)->properties[_localctx->name] = _localctx->value; 
    
   }
   catch (RecognitionException &e) {

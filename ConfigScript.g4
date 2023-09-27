@@ -5,9 +5,9 @@ grammar ConfigScript;
     #include <any>
 }
 
-config : objects=object* EOF ;
+config : objects=topLevelObject* EOF ;
 
-object
+topLevelObject
     returns [
         std::string name
     ]
@@ -19,7 +19,7 @@ property
         std::string name,
         std::any value
     ]
-    : Identifier propertyValue { $name = $Identifier->getText(); antlrcpp::downCast<ObjectValueContext*>(_localctx->parent)->propertyMap[$name] = $value; }
+    : Identifier propertyValue { $name = $Identifier->getText(); antlrcpp::downCast<ObjectValueContext*>(_localctx->parent)->properties[$name] = $value; }
     ;
 
 propertyValue
@@ -35,7 +35,7 @@ propertyValue
 objectValue
     returns [
         std::string classifier,
-        std::map<std::string, std::any> propertyMap
+        std::map<std::string, std::any> properties
     ]
     : '{' property* '}'
     | STRING '{' (property)* '}' { $classifier = $STRING.text; }

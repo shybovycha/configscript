@@ -23,8 +23,8 @@ public:
   virtual void enterConfig(ConfigScriptParser::ConfigContext * /*ctx*/) override { }
   virtual void exitConfig(ConfigScriptParser::ConfigContext * /*ctx*/) override { }
 
-  virtual void enterObject(ConfigScriptParser::ObjectContext * /*ctx*/) override { }
-  virtual void exitObject(ConfigScriptParser::ObjectContext * /*ctx*/) override { }
+  virtual void enterTopLevelObject(ConfigScriptParser::TopLevelObjectContext * /*ctx*/) override { }
+  virtual void exitTopLevelObject(ConfigScriptParser::TopLevelObjectContext * /*ctx*/) override { }
 
   virtual void enterProperty(ConfigScriptParser::PropertyContext * /*ctx*/) override { }
   virtual void exitProperty(ConfigScriptParser::PropertyContext * /*ctx*/) override { }

@@ -18,7 +18,7 @@ object_keyword "Example/ObjectName"
 }
 ```
 
-This repo includes a parser implementation in C++, so grammar is spiced up with the C++-related [actions](https://github.com/antlr/antlr4/blob/master/doc/actions.md).
+This repo includes a parser implementation in C++, so grammar is spiced up with the C++-specific [actions](https://github.com/antlr/antlr4/blob/master/doc/actions.md).
 
 ## Building
 
@@ -105,7 +105,7 @@ To access the top-level object body (which is a map/dictionary of properties), u
 ```cpp
 auto objectValue = obj->value;
 
-std::map<std::string, std::any> propertyMap = objectValue->propertyMap;
+std::map<std::string, std::any> properties = objectValue->properties;
 ```
 
 Each property is of `std::any` type, so you would have to cast it to whatever it is in order to access a specific property value:
@@ -120,7 +120,7 @@ If a property is an object on its own, you will have to cast it to `ConfigScript
 ```cpp
 auto obj = std::any_cast<ConfigScriptParser::ObjectValueContext*>(value);
 
-auto properties = obj->propertyMap;
+auto properties = obj->properties;
 ```
 
 Objects can have a _classifier_, which is a string following the object _name_:

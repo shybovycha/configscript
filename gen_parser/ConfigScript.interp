@@ -34,7 +34,7 @@ BLOCK_COMMENT
 
 rule names:
 config
-object
+topLevelObject
 property
 propertyValue
 objectValue

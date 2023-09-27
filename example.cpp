@@ -57,7 +57,7 @@ void printAny(std::any value)
 
         std::cout << std::format("(obj, {}) {{\n", obj->classifier);
 
-        auto props = obj->propertyMap;
+        auto props = obj->properties;
 
         for (auto& prop_kv : props)
         {
@@ -68,9 +68,9 @@ void printAny(std::any value)
 
         std::cout << "\n}";
     }
-    else if (value.type() == typeid(ConfigScriptParser::ObjectContext*))
+    else if (value.type() == typeid(ConfigScriptParser::TopLevelObjectContext*))
     {
-        auto obj = std::any_cast<ConfigScriptParser::ObjectContext*>(value);
+        auto obj = std::any_cast<ConfigScriptParser::TopLevelObjectContext*>(value);
 
         auto objectName = obj->name;
         auto objectValue = obj->value;
@@ -78,9 +78,9 @@ void printAny(std::any value)
 
         std::cout << std::format("<top level> {} ({}) {{\n", objectName, objectClassifier);
 
-        auto propertyMap = objectValue->propertyMap;
+        auto properties = objectValue->properties;
 
-        for (auto& p : propertyMap)
+        for (auto& p : properties)
         {
             std::cout << p.first << " = ";
 
@@ -134,7 +134,7 @@ my_object_1 "Example/ObjectName" // <--- this can not be just Example/ObjectName
 
     std::cout << "Parse Tree: " << s << std::endl;
 
-    auto objects = antlrcpp::downCast<ConfigScriptParser::ConfigContext*>(tree)->object();
+    auto objects = antlrcpp::downCast<ConfigScriptParser::ConfigContext*>(tree)->topLevelObject();
 
     std::cout << "Objects found: " << objects.size() << std::endl;
 

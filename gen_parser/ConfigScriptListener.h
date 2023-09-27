@@ -21,8 +21,8 @@ public:
   virtual void enterConfig(ConfigScriptParser::ConfigContext *ctx) = 0;
   virtual void exitConfig(ConfigScriptParser::ConfigContext *ctx) = 0;
 
-  virtual void enterObject(ConfigScriptParser::ObjectContext *ctx) = 0;
-  virtual void exitObject(ConfigScriptParser::ObjectContext *ctx) = 0;
+  virtual void enterTopLevelObject(ConfigScriptParser::TopLevelObjectContext *ctx) = 0;
+  virtual void exitTopLevelObject(ConfigScriptParser::TopLevelObjectContext *ctx) = 0;
 
   virtual void enterProperty(ConfigScriptParser::PropertyContext *ctx) = 0;
   virtual void exitProperty(ConfigScriptParser::PropertyContext *ctx) = 0;
