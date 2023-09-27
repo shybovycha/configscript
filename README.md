@@ -10,6 +10,11 @@ object_keyword "Example/ObjectName"
 {
     attribute_name "some value"
 
+    list_of_strings_attribute [
+        "item #1" "item #2"
+        "item #3" "item #4" "item #5"
+    ]
+
     object_keyword2 "Nested Object"
     {
         other_attribute 1 2 3
@@ -59,6 +64,11 @@ my_object_1 "Example/ObjectName" // <--- this can not be just Example/ObjectName
 {
     some_attribute "some value"
 
+    list_of_strings_attribute [
+        "item #1" "item #2"
+        "item #3" "item #4" "item #5"
+    ]
+
     my_object_2 "Nested Object"
     {
         other_attribute 1 2 3
@@ -87,6 +97,7 @@ std::map<std::string, ConfigScript::PropertyType> properties = config[0].propert
 * `bool`
 * `int`
 * `float`
+* lists of strings (`std::vector<std::string>`)
 * objects, represented as 
   ```cpp
   ConfigScript::Object {

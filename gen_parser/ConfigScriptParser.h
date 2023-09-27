@@ -16,13 +16,15 @@
 class  ConfigScriptParser : public antlr4::Parser {
 public:
   enum {
-    T__0 = 1, T__1 = 2, STRING = 3, BOOL = 4, Identifier = 5, INT = 6, FLOAT = 7, 
-    WHITESPACE = 8, ALPHA = 9, NUM = 10, LINE_COMMENT = 11, BLOCK_COMMENT = 12
+    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, STRING = 5, BOOL = 6, Identifier = 7, 
+    INT = 8, FLOAT = 9, WHITESPACE = 10, ALPHA = 11, NUM = 12, LINE_COMMENT = 13, 
+    BLOCK_COMMENT = 14
   };
 
   enum {
     RuleConfig = 0, RuleTopLevelObject = 1, RuleProperty = 2, RulePropertyValue = 3, 
-    RuleObjectValue = 4, RuleIntVector = 5, RuleFloatVector = 6, RuleComment = 7
+    RuleObjectValue = 4, RuleIntVector = 5, RuleFloatVector = 6, RuleStringList = 7, 
+    RuleComment = 8
   };
 
   explicit ConfigScriptParser(antlr4::TokenStream *input);
@@ -49,6 +51,7 @@ public:
   class ObjectValueContext;
   class IntVectorContext;
   class FloatVectorContext;
+  class StringListContext;
   class CommentContext; 
 
   class  ConfigContext : public antlr4::ParserRuleContext {
@@ -110,6 +113,7 @@ public:
     antlr4::Token *boolToken = nullptr;
     antlr4::Token *stringToken = nullptr;
     ConfigScriptParser::ObjectValueContext *objectValueContext = nullptr;
+    ConfigScriptParser::StringListContext *stringListContext = nullptr;
     PropertyValueContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     IntVectorContext *intVector();
@@ -119,6 +123,7 @@ public:
     antlr4::tree::TerminalNode *BOOL();
     antlr4::tree::TerminalNode *STRING();
     ObjectValueContext *objectValue();
+    StringListContext *stringList();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -175,6 +180,21 @@ public:
   };
 
   FloatVectorContext* floatVector();
+
+  class  StringListContext : public antlr4::ParserRuleContext {
+  public:
+    std::vector<std::string> elements;
+    StringListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<antlr4::tree::TerminalNode *> STRING();
+    antlr4::tree::TerminalNode* STRING(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  StringListContext* stringList();
 
   class  CommentContext : public antlr4::ParserRuleContext {
   public:

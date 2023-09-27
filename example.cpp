@@ -1,4 +1,5 @@
-﻿#include <format>
+﻿#include <numeric>
+#include <format>
 #include <iostream>
 #include <map>
 #include <variant>
@@ -21,43 +22,51 @@ void prettyPrint(ConfigScript::PropertyType value)
     }
     else if (std::holds_alternative<ConfigScript::Vec2i>(value))
     {
-        auto vec = std::get<ConfigScript::Vec2i>(value);
+        auto& vec = std::get<ConfigScript::Vec2i>(value);
 
         std::cout << std::format("(vec2i) {{ {}, {} }}\n", vec.x, vec.y);
     }
     else if (std::holds_alternative<ConfigScript::Vec3i>(value))
     {
-        auto vec = std::get<ConfigScript::Vec3i>(value);
+        auto& vec = std::get<ConfigScript::Vec3i>(value);
 
         std::cout << std::format("(vec3i) {{ {}, {}, {} }}\n", vec.x, vec.y, vec.z);
     }
     else if (std::holds_alternative<ConfigScript::Vec4i>(value))
     {
-        auto vec = std::get<ConfigScript::Vec4i>(value);
+        auto& vec = std::get<ConfigScript::Vec4i>(value);
 
         std::cout << std::format("(vec4i) {{ {}, {}, {}, {} }}\n", vec.x, vec.y, vec.z, vec.w);
     }
     else if (std::holds_alternative<ConfigScript::Vec2f>(value))
     {
-        auto vec = std::get<ConfigScript::Vec2f>(value);
+        auto& vec = std::get<ConfigScript::Vec2f>(value);
 
         std::cout << std::format("(vec2f) {{ {}, {} }}\n", vec.x, vec.y);
     }
     else if (std::holds_alternative<ConfigScript::Vec3f>(value))
     {
-        auto vec = std::get<ConfigScript::Vec3f>(value);
+        auto& vec = std::get<ConfigScript::Vec3f>(value);
 
-        std::cout << std::format("(vec3f) {{ {}, {}, {}}}\n", vec.x, vec.y, vec.z);
+        std::cout << std::format("(vec3f) {{ {}, {}, {} }}\n", vec.x, vec.y, vec.z);
     }
     else if (std::holds_alternative<ConfigScript::Vec4f>(value))
     {
-        auto vec = std::get<ConfigScript::Vec4f>(value);
+        auto& vec = std::get<ConfigScript::Vec4f>(value);
 
         std::cout << std::format("(vec4f) {{ {}, {}, {}, {} }}\n", vec.x, vec.y, vec.z, vec.w);
     }
+    else if (std::holds_alternative<std::vector<std::string>>(value))
+    {
+        auto& list = std::get<std::vector<std::string>>(value);
+        std::transform(list.begin(), list.end(), list.begin(), [](auto s) { return std::format("\"{}\"", s); });
+        auto s = std::accumulate(std::next(list.begin()), list.end(), list[0], [](auto s1, auto s2) { return std::format("{}, {}", s1, s2); });
+
+        std::cout << std::format("(strings) {{ {} }}\n", s);
+    }
     else if (std::holds_alternative<ConfigScript::Object>(value))
     {
-        auto obj = std::get<ConfigScript::Object>(value);
+        auto& obj = std::get<ConfigScript::Object>(value);
 
         auto& objectName = obj.name;
         auto& objectClassifier = obj.classifier;
@@ -97,6 +106,14 @@ my_object_1 "Example/ObjectName" // <--- this can not be just Example/ObjectName
         }
 
         // and so on..
+
+        list_of_strings [
+            "item #1"
+            "item #2"
+            "item #3"
+            "item #4"
+            "item #5"
+        ]
 
         my_long_string "
 long

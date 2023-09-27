@@ -41,6 +41,9 @@ public:
   virtual void enterFloatVector(ConfigScriptParser::FloatVectorContext * /*ctx*/) override { }
   virtual void exitFloatVector(ConfigScriptParser::FloatVectorContext * /*ctx*/) override { }
 
+  virtual void enterStringList(ConfigScriptParser::StringListContext * /*ctx*/) override { }
+  virtual void exitStringList(ConfigScriptParser::StringListContext * /*ctx*/) override { }
+
   virtual void enterComment(ConfigScriptParser::CommentContext * /*ctx*/) override { }
   virtual void exitComment(ConfigScriptParser::CommentContext * /*ctx*/) override { }
 

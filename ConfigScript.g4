@@ -30,6 +30,7 @@ propertyValue
     | BOOL { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = static_cast<bool>($BOOL.text == "true"); }
     | STRING { std::string s1 = $STRING.text; std::string_view s = s1; if (!s.empty() && s.front() == '"' && s.back() == '"') { s.remove_prefix(1); s.remove_suffix(1); } antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = std::string(s); }
     | objectValue { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = antlrcpp::downCast<PropertyValueContext*>(_localctx)->objectValue(); $objectValue.name = antlrcpp::downCast<PropertyContext*>(_localctx->parent)->identifierToken->getText(); }
+    | stringList { antlrcpp::downCast<PropertyContext*>(_localctx->parent)->value = $stringList.elements; }
     ;
 
 objectValue
@@ -50,6 +51,11 @@ intVector
 floatVector
     returns [ std::vector<float> elements ]
     : FLOAT+ { auto v = $ctx->FLOAT(); std::for_each(v.begin(), v.end(), [&](auto* node) { _localctx->elements.push_back(std::stof(node->getText())); }); }
+    ;
+
+stringList
+    returns [ std::vector<std::string> elements ]
+    : '[' STRING+ ']' { auto v = $ctx->STRING(); std::for_each(v.begin(), v.end(), [&](auto* node) { std::string s1 = node->getText(); std::string_view s = s1; if (!s.empty() && s.front() == '"' && s.back() == '"') { s.remove_prefix(1); s.remove_suffix(1); } _localctx->elements.push_back(std::string(s)); }); }
     ;
 
 comment : LINE_COMMENT | BLOCK_COMMENT ;

@@ -47,7 +47,7 @@ namespace ConfigScript
 
     struct Object;
 
-    using PropertyType = std::variant<Vec2i, Vec3i, Vec4i, Vec2f, Vec3f, Vec4f, Object, std::string, int, float, bool>;
+    using PropertyType = std::variant<Vec2i, Vec3i, Vec4i, Vec2f, Vec3f, Vec4f, Object, std::vector<std::string>, std::string, int, float, bool>;
 
     struct Object {
         std::string name;
@@ -116,6 +116,10 @@ namespace ConfigScript
                 if (vec.size() == 4) {
                     return Vec4f{ vec[0], vec[1], vec[2], vec[3] };
                 }
+            }
+            else if (value.type() == typeid(std::vector<std::string>))
+            {
+                return std::any_cast<std::vector<std::string>>(value);
             }
             else if (value.type() == typeid(ConfigScriptParser::ObjectValueContext*))
             {

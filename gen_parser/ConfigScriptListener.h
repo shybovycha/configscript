@@ -39,6 +39,9 @@ public:
   virtual void enterFloatVector(ConfigScriptParser::FloatVectorContext *ctx) = 0;
   virtual void exitFloatVector(ConfigScriptParser::FloatVectorContext *ctx) = 0;
 
+  virtual void enterStringList(ConfigScriptParser::StringListContext *ctx) = 0;
+  virtual void exitStringList(ConfigScriptParser::StringListContext *ctx) = 0;
+
   virtual void enterComment(ConfigScriptParser::CommentContext *ctx) = 0;
   virtual void exitComment(ConfigScriptParser::CommentContext *ctx) = 0;
 
